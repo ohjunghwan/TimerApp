@@ -1,0 +1,5 @@
+<resources>
+    <string name="app_name">timer</string>
+    <string name="toggle_start">start</string>
+    <string name="toggle_stop">stop</string>
+</resources>
