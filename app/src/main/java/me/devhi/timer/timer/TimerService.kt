@@ -1,4 +1,4 @@
-package me.devhi.timer
+package me.devhi.timer.timer
 
 import android.app.Service
 import android.content.Intent
@@ -9,15 +9,15 @@ import kotlin.coroutines.CoroutineContext
 
 
 class TimerService : Service(), CoroutineScope {
-    private var job = Job()
-    override val coroutineContext: CoroutineContext
-        get() = Dispatchers.IO + job
-    lateinit var activity: MainActivity
+    lateinit var consumer: TimerConsumer
     private val binder by lazy {
         TimerBinder(this@TimerService)
     }
+    private var job = Job()
+    override val coroutineContext: CoroutineContext
+        get() = Dispatchers.IO + job
 
-    override fun onBind(intent: Intent?): IBinder? {
+    override fun onBind(intent: Intent?): IBinder {
         return binder
     }
 
@@ -28,7 +28,7 @@ class TimerService : Service(), CoroutineScope {
         launch {
             while (isActive) {
                 delay(1000)
-                activity.consumeTime()
+                consumer.onTick()
             }
         }
     }
@@ -43,6 +43,4 @@ class TimerService : Service(), CoroutineScope {
     }
 
     class TimerBinder(val service: TimerService) : Binder()
-
-
 }
